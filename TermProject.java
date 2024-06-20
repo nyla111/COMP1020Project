@@ -7,8 +7,15 @@ interface Graph{
 class WeightedGraph implements Graph{
     int V,E;
     List<Integer>[] adjacencyList;
+    WeightedGraph(int V){
+        this.V = V;
+        adjacencyList = new List[V];
+    }
     public void addEdge(int u, int v, int w) {     
         
+    }
+    public void removeEdge(int u, int v){
+
     }
     @Override
     public void BFS(int start) {
@@ -37,8 +44,15 @@ class UnweightedGraph implements Graph{
     }
     int V,E;
     List<Pair>[] adjacencyList;
+    UnweightedGraph(int V){
+        this.V = V;
+        adjacencyList = new List[V];
+    }
     public void addEdge(int u, int v){
         // TO DO
+    }
+    public void removeEdge(int u, int v){
+        
     }
     @Override
     public void BFS(int start) {
@@ -54,7 +68,7 @@ class UnweightedGraph implements Graph{
 interface DirectedGraph extends Graph{
     boolean checkCycle();
     List<Integer> TopologicalSorting();
-    void StronglyConnectedComponents(); // not mentioned in the course, can be remove
+    
 }
 interface UndirectedGraph extends Graph{
     boolean checkCycle();
@@ -62,6 +76,9 @@ interface UndirectedGraph extends Graph{
 }
 
 class UnweightedUndirectedGraph extends UnweightedGraph implements UndirectedGraph{
+    UnweightedUndirectedGraph(int V){
+        super(V);
+    }
     @Override
     public boolean checkCycle() {
         // TODO Auto-generated method stub
@@ -78,16 +95,15 @@ class UnweightedUndirectedGraph extends UnweightedGraph implements UndirectedGra
     }
 }
 class UnweightedDirectedGraph extends UnweightedGraph implements DirectedGraph{
+    UnweightedDirectedGraph(int V){
+        super(V);
+    }
     @Override
     public boolean checkCycle() {
         // TODO Auto-generated method stub
         return false;
     }
-    @Override
-    public void StronglyConnectedComponents() {
-        // TODO Auto-generated method stub
-        
-    }
+    
     @Override
     public List<Integer> TopologicalSorting() {
         // TODO Auto-generated method stub
@@ -96,6 +112,9 @@ class UnweightedDirectedGraph extends UnweightedGraph implements DirectedGraph{
 
 }
 class WeightedUndirectedGraph extends WeightedGraph implements UndirectedGraph{
+    WeightedUndirectedGraph(int V){
+        super(V);
+    }
     @Override
     public boolean checkCycle() {
         // TODO Auto-generated method stub
@@ -109,16 +128,15 @@ class WeightedUndirectedGraph extends WeightedGraph implements UndirectedGraph{
 
 }
 class WeightedDirectedGraph extends WeightedGraph implements DirectedGraph{
+    WeightedDirectedGraph(int V){
+        super(V);
+    }
     @Override
     public boolean checkCycle() {
         // TODO Auto-generated method stub
         return false;
     }
-    @Override
-    public void StronglyConnectedComponents() {
-        // TODO Auto-generated method stub
-        
-    }
+    
     @Override
     public List<Integer> TopologicalSorting() {
         // TODO Auto-generated method stub
