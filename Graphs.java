@@ -12,7 +12,7 @@ class UnweightedUndirectedGraph extends UnweightedGraph implements UndirectedGra
     @Override
     public boolean checkCycle() {
         DisjointSet DS = new DisjointSet(V);
-        for(UnweightedEdge x:Edges){
+        for(UnweightedEdge x : Edges){
             if(!DS.join(x.u, x.v)){
                 return false;
             }
@@ -22,32 +22,29 @@ class UnweightedUndirectedGraph extends UnweightedGraph implements UndirectedGra
     private void checkBipartiteRecur(int i,int c, int[] color){
         
         color[i] = c;
-        for(int v:adjacencyList[i]){
-            if(color[v]==-1){
-                checkBipartiteRecur(i, c, color);
+        for(int v : adjacencyList[i]){
+            if(color[v] == -1){
+                checkBipartiteRecur(v, 1 - c, color);
             }
         }
     }
     public boolean checkBipartite(){
         int[] color = new int[V+5];
         Arrays.fill(color, -1);
-        for(int i=0;i<V;i++){
+        for (int i = 0; i < V; i++){
             if(color[i] == -1){
-                checkBipartiteRecur(i,0,color);
+                checkBipartiteRecur(i, 0, color);
             }
         }
         
-        for(int i=0;i<E;i++){
-            if(color[Edges.get(i).u]==color[Edges.get(i).v]){
+        for (int i = 0; i < E; i++){
+            if (color[Edges.get(i).u] == color[Edges.get(i).v]) {
                 return false;
             }
         }
         return true;
     }
-    public boolean isBipartite(){
-        
-        return false;
-    }
+
 }
 class UnweightedDirectedGraph extends UnweightedGraph implements DirectedGraph{
     public UnweightedDirectedGraph(int V){
@@ -57,19 +54,15 @@ class UnweightedDirectedGraph extends UnweightedGraph implements DirectedGraph{
         super(V,E);
     }
     private boolean checkCycleRecur(int u, boolean[] visited, boolean[] recur){
-        if (recur[u])
-        return true;
-        if (visited[u])
-        return false;
+        if (recur[u]) return true;
+        if (visited[u]) return false;
 
         visited[u] = true;
         recur[u] = true;
         for (int v : adjacencyList[u]){
-            if (checkCycleRecur(v, visited, recur))
-                return true;    
+            if (checkCycleRecur(v, visited, recur)) return true;    
         }
         recur[u] = false;
-
         return false;
     }
 
@@ -77,34 +70,34 @@ class UnweightedDirectedGraph extends UnweightedGraph implements DirectedGraph{
     public boolean checkCycle() {
         boolean[] visisted = new boolean[V+5];
         boolean[] recur = new boolean[V+5];
-        for(int i=0;i<V;i++){
+        for (int i = 0; i < V; i++){
             if(checkCycleRecur(i, visisted, recur)) return true;
         }
         return false;
     }
-    private void topoSortRecur(int u,boolean[] visisted, Stack<Integer> ST){//dfs
-        for(int v:adjacencyList[u]){
+    private void topoSortRecur(int u, boolean[] visisted, Stack<Integer> stack){//dfs
+        visisted[u] = true;
+        for(int v : adjacencyList[u]){
             if(!visisted[v]){
-                topoSortRecur(v, visisted, ST);
+                topoSortRecur(v, visisted, stack);
             }
-            visisted[u] = true;
-            ST.push(u);
         }
+        stack.push(u);
     }
     @Override
-    public ArrayList<Integer> TopologicalSorting() {
-        Stack<Integer> ST = new Stack<>();
+    public ArrayList<Integer> topologicalSorting() {
+        Stack<Integer> stack = new Stack<>();
         boolean[] visisted = new boolean[V+5];
-        for(int i=0;i<V;i++){
+        for(int i = 0; i < V; i++){
             if (!visisted[i]) {
-                topoSortRecur(i, visisted, ST);
+                topoSortRecur(i, visisted, stack);
             }
         }
-        ArrayList<Integer> ret = new ArrayList<>();
-        while (!ST.isEmpty()) {
-            ret.add(ST.pop());
+        ArrayList<Integer> res = new ArrayList<>();
+        while (!stack.isEmpty()) {
+            res.add(stack.pop());
         }
-        return ret;
+        return res;
     }
 
 }
@@ -118,7 +111,7 @@ class WeightedUndirectedGraph extends WeightedGraph implements UndirectedGraph{
     @Override
     public boolean checkCycle() {
         DisjointSet DS = new DisjointSet(V);
-        for(WeightedEdge x:Edges){
+        for(WeightedEdge x : Edges){
             if(!DS.join(x.u, x.v)){
                 return false;
             }
@@ -129,13 +122,14 @@ class WeightedUndirectedGraph extends WeightedGraph implements UndirectedGraph{
     public int MST() {
         int ret = 0;
         int cnt = 0;
+        Collections.sort(Edges, Comparator.comparingInt(e -> e.w));
         DisjointSet DS = new DisjointSet(V);
-        for(WeightedEdge x:Edges){
-            if(DS.join(x.u, x.v)){
+        for(WeightedEdge x : Edges){
+            if (DS.join(x.u, x.v)) {
                 cnt++;
-                ret+=x.w;
+                ret += x.w;
             }
-            if(cnt==V-1){
+            if(cnt == V-1){
                 break;
             }
         }
@@ -151,20 +145,16 @@ class WeightedDirectedGraph extends WeightedGraph implements DirectedGraph{
         super(V,E);
     }
     private boolean checkCycleRecur(int u, boolean[] visited, boolean[] recur){
-        if (recur[u])
-        return true;
-        if (visited[u])
-        return false;
+        if (recur[u]) return true;
+        if (visited[u]) return false;
 
         visited[u] = true;
         recur[u] = true;
         for (Pair x : adjacencyList[u]){
             int v = x.v;
-            if (checkCycleRecur(v, visited, recur))
-                return true;    
+            if (checkCycleRecur(v, visited, recur)) return true;    
         }
         recur[u] = false;
-
         return false;
     }
 
@@ -172,35 +162,35 @@ class WeightedDirectedGraph extends WeightedGraph implements DirectedGraph{
     public boolean checkCycle() {
         boolean[] visisted = new boolean[V+5];
         boolean[] recur = new boolean[V+5];
-        for(int i=0;i<V;i++){
+        for(int i = 0; i < V; i++){
             if(checkCycleRecur(i, visisted, recur)) return true;
         }
         return false;
     }
     
-    private void topoSortRecur(int u,boolean[] visisted, Stack<Integer> ST){//dfs
-        for(Pair x:adjacencyList[u]){
+    private void topoSortRecur(int u,boolean[] visisted, Stack<Integer> stack){//dfs
+        visisted[u] = true;
+        for(Pair x : adjacencyList[u]){
             int v = x.v;
             if(!visisted[v]){
-                topoSortRecur(v, visisted, ST);
+                topoSortRecur(v, visisted, stack);
             }
-            visisted[u] = true;
-            ST.push(u);
         }
+        stack.push(u);
     }
     @Override
-    public ArrayList<Integer> TopologicalSorting() {
-        Stack<Integer> ST = new Stack<>();
+    public ArrayList<Integer> topologicalSorting() {
+        Stack<Integer> stack = new Stack<>();
         boolean[] visisted = new boolean[V+5];
-        for(int i=0;i<V;i++){
+        for(int i = 0; i < V; i++){
             if (!visisted[i]) {
-                topoSortRecur(i, visisted, ST);
+                topoSortRecur(i, visisted, stack);
             }
         }
-        ArrayList<Integer> ret = new ArrayList<>();
-        while (!ST.isEmpty()) {
-            ret.add(ST.pop());
+        ArrayList<Integer> res = new ArrayList<>();
+        while (!stack.isEmpty()) {
+            res.add(stack.pop());
         }
-        return ret;
+        return res;
     }
 }
